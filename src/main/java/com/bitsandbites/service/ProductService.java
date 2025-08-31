@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bitsandbites.Exception.ResourceNotFoundException;
 import com.bitsandbites.dto.ProductDto;
 import com.bitsandbites.entity.Category;
 import com.bitsandbites.entity.Product;
@@ -38,15 +39,15 @@ public class ProductService {
 	}
 	
 	public ProductDto getProductById(Long id) {
-		Product product=productRepository.findById(id).orElseThrow(()->new RuntimeException("no specified product"));
+		Product product=productRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("no specified product with id "+id));
 		return ProductMapper.entityToDto(product);
 	}
 	
 	
 	public ProductDto updateProduct(Long id ,ProductDto productDto) {
-		Category category=categoryRepository.findById(id).orElseThrow(()->new RuntimeException("no category"));
+		Category category=categoryRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("no category with id "+id));
 		
-		Product product=productRepository.findById(id).orElseThrow(()->new RuntimeException("no product"));
+		Product product=productRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("no product with id "+id));
 		
 		product.setName(productDto.getName());
 		product.setPrice(productDto.getPrice());
@@ -59,7 +60,7 @@ public class ProductService {
 	
 	public void deleteProduct(Long id) {
 		if(!productRepository.existsById(id)) {
-			throw new RuntimeException("No product found");
+			throw new ResourceNotFoundException("No product found with id "+ id);
 		}
 		productRepository.deleteById(id);
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bitsandbites.Exception.ResourceNotFoundException;
 import com.bitsandbites.dto.CategoryDto;
 import com.bitsandbites.entity.Category;
 import com.bitsandbites.mapper.CategoryMapper;
@@ -30,13 +31,13 @@ public class CategoryService {
 	public CategoryDto getCategory(Long id) {
 		return categoryRepository.findById(id)
 				.map(CategoryMapper::entityToDto)
-				.orElseThrow(()->new RuntimeException("Specified id Not found"));
+				.orElseThrow(()->new ResourceNotFoundException("no category found with id "+id));
 		
 	}
 	
 	//Updated
 	public CategoryDto updateCategory(Long id,CategoryDto categoryDto) {
-		Category category=categoryRepository.findById(id).orElseThrow(()->new RuntimeException("No specified category found"));
+		Category category=categoryRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("No specified category found with id "+id));
 		category.setName(categoryDto.getName());
 		Category updated=categoryRepository.save(category);
 		return CategoryMapper.entityToDto(updated);
@@ -45,7 +46,7 @@ public class CategoryService {
 	//Deleted
 	public void deleteCategory(Long id) {
 		if(!categoryRepository.existsById(id)) {
-			throw new RuntimeException("Given id does not exist");
+			throw new ResourceNotFoundException("No category found with id "+id);
 		}
 		categoryRepository.deleteById(id);
 	}
