@@ -17,6 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bitsandbites.dto.ProductDto;
 import com.bitsandbites.service.ProductService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(
+		name="Product Service REST API CRUD operation",
+		description="CREATE READ UPDATE DELETE operations for Product REST API"
+	)//swagger annotation to provide name and description of the controller class
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -28,6 +35,12 @@ public class ProductController {
 	public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto){
 		return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productDto));
 	}
+	
+	@Operation(
+			summary="Fetch all products",
+			description="REST API to fetch all products"
+	)//to provide description of controller methods
+	
 	@GetMapping
 	public ResponseEntity<List<ProductDto>> getAllProduct(){
 		return ResponseEntity.status(HttpStatus.OK).body(productService.getAllProduct());
