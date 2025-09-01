@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -22,6 +23,25 @@ public class GlobalExceptionHandler {
 				
 	}
 	
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ErrorResponseDto> handleValidationException(MethodArgumentNotValidException ex){
+		ErrorResponseDto errorResponseDto=new ErrorResponseDto(
+				LocalDateTime.now(),
+				HttpStatus.BAD_REQUEST.value(),
+				"Validation Failed",
+				ex.getMessage()
+		);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponseDto);
+	}
+//	If validation fails, Spring throws MethodArgumentNotValidException.
+//	You can catch it in a @ControllerAdvice (Global Exception Handler) and return a structured response.
+	//For validation errors (like @NotBlank, @Positive, etc.), you do not need to create a separate custom exception because Spring automatically throws a special exception:
+	//MethodArgumentNotValidException → when validation fails on a @Valid @RequestBody.
+	//ConstraintViolationException → when validation fails on path/query params (@RequestParam, @PathVariable).
+	
+	
+	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponseDto> handleGeneralException(Exception ex){
 		ErrorResponseDto errorResponseDto=new ErrorResponseDto(
@@ -35,3 +55,6 @@ public class GlobalExceptionHandler {
 //	
 //	It handles any other unhandled exception in your project that is not specifically mapped in other @ExceptionHandler methods.
 }
+
+
+

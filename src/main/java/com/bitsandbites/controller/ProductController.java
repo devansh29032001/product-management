@@ -19,6 +19,7 @@ import com.bitsandbites.service.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(
 		name="Product Service REST API CRUD operation",
@@ -32,7 +33,7 @@ public class ProductController {
 	private ProductService productService;
 	
 	@PostMapping
-	public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto){
+	public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto){
 		return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productDto));
 	}
 	
@@ -52,7 +53,7 @@ public class ProductController {
 	}	
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id,@RequestBody ProductDto productDto){
+	public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id,@Valid @RequestBody ProductDto productDto){
 		return ResponseEntity.status(HttpStatus.OK).body(productService.updateProduct(id, productDto));
 	}
 	
