@@ -56,6 +56,24 @@ public class ProductService {
 //	✅ Using Page.map() (recommended)
 	
 	
+	//here we are using filter and query method which is defined in ProductRepository
+	
+	public List<ProductDto> findProductsByCategory(String categoryName){
+		return productRepository.findByCategoryName(categoryName).stream()
+				.map(ProductMapper::entityToDto).toList();
+	}
+	
+	public List<ProductDto> findAllProductBetweenPrice(double min,double max){
+		return productRepository.findByPriceBetween(min, max).stream()
+				.map(ProductMapper::entityToDto).toList();
+	}
+	
+	
+	//finding product using @Query and native Sql
+	public List<ProductDto> findProductsCostlierThan(double price){
+		return productRepository.findProductCostlierThan(price).stream()
+				.map(ProductMapper::entityToDto).toList();
+	}
 	
 	
 	public ProductDto getProductById(Long id) {

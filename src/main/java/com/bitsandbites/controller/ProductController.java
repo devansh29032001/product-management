@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bitsandbites.dto.ProductDto;
@@ -40,6 +41,7 @@ public class ProductController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productDto));
 	}
 	
+	
 	@Operation(
 			summary="Fetch all products",
 			description="REST API to fetch all products"
@@ -62,6 +64,22 @@ public class ProductController {
 	public ResponseEntity<ProductDto> getProductById(@PathVariable Long id){
 		return ResponseEntity.status(HttpStatus.OK).body(productService.getProductById(id));
 	}	
+	
+	//filter and query methods
+	@GetMapping("/category-name/{name}")
+	public ResponseEntity<List<ProductDto>> getProductsByCategory(@PathVariable String name){
+		return ResponseEntity.status(HttpStatus.OK).body(productService.findProductsByCategory(name));
+	}
+	
+	@GetMapping("costlier-than/{price}")
+	public ResponseEntity<List<ProductDto>> getProductsCostlierThan(@PathVariable double price){
+		return ResponseEntity.status(HttpStatus.OK).body(productService.findProductsCostlierThan(price));
+	}
+	
+	@GetMapping("/by-price")
+	public ResponseEntity<List<ProductDto>> getProductsBetweenPrice(@RequestParam double min,@RequestParam double max){
+		return ResponseEntity.status(HttpStatus.OK).body(productService.findAllProductBetweenPrice(min, max));
+	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id,@Valid @RequestBody ProductDto productDto){
