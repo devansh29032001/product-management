@@ -3,6 +3,9 @@ package com.bitsandbites.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,11 +44,19 @@ public class ProductController {
 			summary="Fetch all products",
 			description="REST API to fetch all products"
 	)//to provide description of controller methods
+
+
+//	@GetMapping
+//	public ResponseEntity<List<ProductDto>> getAllProduct(){
+//		return ResponseEntity.status(HttpStatus.OK).body(productService.getAllProduct());
+//	}
 	
+//	implementing pagination in controller
 	@GetMapping
-	public ResponseEntity<List<ProductDto>> getAllProduct(){
-		return ResponseEntity.status(HttpStatus.OK).body(productService.getAllProduct());
+	public ResponseEntity<Page<ProductDto>> getAllProduct( @PageableDefault(size = 5, sort = "name") Pageable pageable){
+		return ResponseEntity.status(HttpStatus.OK).body(productService.getAllProduct(pageable));
 	}
+	
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<ProductDto> getProductById(@PathVariable Long id){
@@ -63,3 +74,6 @@ public class ProductController {
 	}
 	
 }
+
+
+
