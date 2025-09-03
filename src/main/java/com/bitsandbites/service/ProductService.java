@@ -4,6 +4,8 @@ package com.bitsandbites.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,10 @@ import com.bitsandbites.repository.ProductRepository;
 @Service
 public class ProductService {
 	
+	
+	//implementing loggers
+	private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
+	
 	@Autowired
 	private ProductRepository productRepository;
 	@Autowired
@@ -35,9 +41,18 @@ public class ProductService {
 	}
 	
 	public List<ProductDto> getAllProduct(){
-		return productRepository.findAll().stream()
-				.map(ProductMapper::entityToDto)
-				.toList();
+		 logger.info("Fetching all products...");
+		 
+		 //default way to write getAllProduct Service method
+//		return productRepository.findAll().stream()
+//				.map(ProductMapper::entityToDto)
+//				.toList();
+		 
+		 //this way we are implementing loggers
+		 List<ProductDto> products=productRepository.findAll().stream()
+				 .map(ProductMapper::entityToDto).toList();
+		 logger.debug("Fetched {} products", products.size());
+		 return products;
 	}
 	
 	
@@ -128,5 +143,54 @@ public class ProductService {
 //getTotalPages() → number of pages
 //getTotalElements() → total count
 //isFirst(), isLast() → helpers
+
+
+
+
+
+//Q). What is Logging (vs System.out.println)?
+//
+//System.out.println("msg") → goes only to console, can’t control format, can’t separate INFO/ERROR, can’t disable in production.
+//
+//Logging framework → configurable, supports different levels (info, warn, error…), can write to files, console, or monitoring tools (Splunk, ELK, etc.).
+//
+//Spring Boot uses:
+//SLF4J (API - interface for logging)
+//Logback (default implementation)
+
+//2. Logging Levels
+//Level	Usage
+//TRACE	Very detailed, rarely used
+//DEBUG	For debugging (values, flow)
+//INFO	Normal flow (service started, request processed)
+//WARN	Something unexpected, but not fatal
+//ERROR	Failure, something broke
+
+//private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
+
+
+//write this in application.properties file
+//logging configuration
+//# Default level
+//logging.level.root=INFO  
+//
+//# Show SQL queries from Hibernate
+//logging.level.org.hibernate.SQL=DEBUG  
+//logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE  
+//
+//# Enable DEBUG logs only for your package
+//logging.level.com.bitsandbites=DEBUG  
+//
+//# Write logs to a file
+//logging.file.name=logs/app.log
+
+//writing loggers in controller
+//@GetMapping
+//public ResponseEntity<List<ProductDto>> getAllProducts() {
+//    logger.info("GET request received for all products");
+//    List<ProductDto> products = productService.getAllProducts();
+//    logger.info("Returning {} products", products.size());
+//    return ResponseEntity.ok(products);
+//}
 
 

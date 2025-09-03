@@ -48,17 +48,17 @@ public class ProductController {
 	)//to provide description of controller methods
 
 
-//	@GetMapping
-//	public ResponseEntity<List<ProductDto>> getAllProduct(){
-//		return ResponseEntity.status(HttpStatus.OK).body(productService.getAllProduct());
-//	}
-	
-//	implementing pagination in controller
 	@GetMapping
-	public ResponseEntity<Page<ProductDto>> getAllProduct( @PageableDefault(size = 5, sort = "name") Pageable pageable){
-		return ResponseEntity.status(HttpStatus.OK).body(productService.getAllProduct(pageable));
+	public ResponseEntity<List<ProductDto>> getAllProduct(){
+		return ResponseEntity.status(HttpStatus.OK).body(productService.getAllProduct());
 	}
 	
+//	implementing pagination in controller
+//	@GetMapping
+//	public ResponseEntity<Page<ProductDto>> getAllProduct( @PageableDefault(size = 5, sort = "name") Pageable pageable){
+//		return ResponseEntity.status(HttpStatus.OK).body(productService.getAllProduct(pageable));
+//	}
+//	
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<ProductDto> getProductById(@PathVariable Long id){
